@@ -54,6 +54,7 @@ def pdf_uploader():
     try:
         if uploaded_file: 
             callbacks.set_resume(uploaded_file)
+            
             callbacks.update_submit(True)
     except:
         st.error('Upload failed, please try again.', icon="🚨")
@@ -66,25 +67,27 @@ def parser_ui():
         analysis()
 
 def parser_results():
-    df = pd.DataFrame(
-    {
-        "feature": ["University", "Degree", "CGPA", 'Graduation Date'],
-        "results": ["XYZ University", "Bachelor of Science in Computer Science", "3.8", "May 2023"],
-    }
-    )
+    # df = pd.DataFrame(
+    # {
+    #     "feature": ["University", "Degree", "CGPA", 'Graduation Date'],
+    #     "results": ["XYZ University", "Bachelor of Science in Computer Science", "3.8", "May 2023"],
+    # }
+    # )
 
-    st.dataframe(
-        df,
-        column_config={
-            "feature": st.column_config.TextColumn(
-                "Entity",
-            ),
-            "results": st.column_config.TextColumn(
-                "Extracted Text",
-            ),
-        },
-        hide_index=True,
-    )
+    # st.dataframe(
+    #     df,
+    #     column_config={
+    #         "feature": st.column_config.TextColumn(
+    #             "Entity",
+    #         ),
+    #         "results": st.column_config.TextColumn(
+    #             "Extracted Text",
+    #         ),
+    #     },
+    #     hide_index=True,
+    # )
+
+    st.dataframe(callbacks.get_segment())
 
 def display_parse_results():
     col1, col2 = st.columns(spec=[1, 1], gap="large")
@@ -97,8 +100,9 @@ def display_parse_results():
     
     with col2:
         with st.spinner('Parsing Resume...'):
-            time.sleep(2)
+            callbacks.segment_resume(resume)
         parser_results()
+        st.button("Update")
 
 
 def analysis():

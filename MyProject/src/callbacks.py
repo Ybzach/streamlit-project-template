@@ -16,3 +16,9 @@ def load_parser():
 
 def update_submit(submitted: bool):
     st.session_state['submitted'] = submitted 
+
+def segment_resume(resume):
+    st.session_state['segmenter'].segment(resume)
+    
+def get_segment():
+    return st.session_state['segmenter'].results

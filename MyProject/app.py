@@ -5,6 +5,7 @@ and navigate your page with respect to `selected_page` session state
 
 import streamlit as st
 from src.pages import HomePage, ParserPage
+from lib.util import resume_segment
 # from streamlit-extras import switch_page
 
 # page config
@@ -18,6 +19,8 @@ if 'resume' not in st.session_state:
     st.session_state['resume'] = None
 if 'analysis' not in st.session_state:
     st.session_state['analysis'] = 'input'
+if 'segmenter' not in st.session_state:
+    st.session_state['segmenter'] = resume_segment.resumeSegmenter()
 
 # page navigation
 HomePage.load_home_page()
