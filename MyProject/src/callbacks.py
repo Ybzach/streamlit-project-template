@@ -4,6 +4,7 @@ this is where you define your callbacks
 
 import streamlit as st
 from src import components
+from lib.util import resume_segment
 
 def set_resume(document):
     st.session_state['resume'] = document
@@ -19,6 +20,9 @@ def update_submit(submitted: bool):
 
 def segment_resume(resume):
     st.session_state['segmenter'].segment(resume)
+
+def reload_segmenter():
+    st.session_state['segmenter'] = resume_segment.resumeSegmenter()
     
-def get_segment():
+def get_segment_results():
     return st.session_state['segmenter'].results

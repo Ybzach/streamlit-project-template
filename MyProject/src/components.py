@@ -66,28 +66,26 @@ def parser_ui():
     with tab2:
         analysis()
 
-def parser_results():
-    # df = pd.DataFrame(
-    # {
-    #     "feature": ["University", "Degree", "CGPA", 'Graduation Date'],
-    #     "results": ["XYZ University", "Bachelor of Science in Computer Science", "3.8", "May 2023"],
-    # }
-    # )
+def display_results(results):
+    results_df = pd.DataFrame.from_dict(results, orient="index").reset_index()
+    results_df.rename(columns={"index": "Section", 0: "Content"}, inplace=True)
+    
+    with st.form("segmenter_editor_form"):
+        st.title("Parser Results")
+        st.caption("Edit the segments as needed.")
+        edited_segment = st.data_editor(
+                results_df,
+                hide_index=True,
+                column_config={
+                    "Section": {"editable": False},
+                },
+                disabled=["Section"],
+            ) 
+        submit_button = st.form_submit_button("Submit")
 
-    # st.dataframe(
-    #     df,
-    #     column_config={
-    #         "feature": st.column_config.TextColumn(
-    #             "Entity",
-    #         ),
-    #         "results": st.column_config.TextColumn(
-    #             "Extracted Text",
-    #         ),
-    #     },
-    #     hide_index=True,
-    # )
-
-    st.dataframe(callbacks.get_segment())
+    if submit_button:
+        segment_saved = st.toast('Saved', icon="🎉")
+    
 
 def display_parse_results():
     col1, col2 = st.columns(spec=[1, 1], gap="large")
@@ -101,8 +99,10 @@ def display_parse_results():
     with col2:
         with st.spinner('Parsing Resume...'):
             callbacks.segment_resume(resume)
-        parser_results()
-        st.button("Update")
+            segment_results = callbacks.get_segment_results()
+            callbacks.reload_segmenter()
+        display_results(segment_results)
+        
 
 
 def analysis():
