@@ -19,10 +19,14 @@ def update_submit(submitted: bool):
     st.session_state['submitted'] = submitted 
 
 def segment_resume(resume):
-    st.session_state['segmenter'].segment(resume)
+    results = st.session_state['segmenter'].segment(resume)
+    set_segment_results(results)
 
 def reload_segmenter():
     st.session_state['segmenter'] = resume_segment.resumeSegmenter()
     
 def get_segment_results():
-    return st.session_state['segmenter'].results
+    return st.session_state['segment_results']
+
+def set_segment_results(results):
+    st.session_state['segment_results'] = results

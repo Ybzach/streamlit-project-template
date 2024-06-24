@@ -21,6 +21,8 @@ if 'analysis' not in st.session_state:
     st.session_state['analysis'] = 'input'
 if 'segmenter' not in st.session_state:
     st.session_state['segmenter'] = resume_segment.resumeSegmenter()
+if 'segment_results' not in st.session_state:
+    st.session_state['segment_results'] = {}
 
 # page navigation
 HomePage.load_home_page()

@@ -83,6 +83,7 @@ class resumeSegmenter:
                 sections[section_head] = section_content + line['text'].strip() + ' '
                 # print("sections: ", sections)
         self.results = sections
+        return sections
 
 
 if __name__ == "__main__":

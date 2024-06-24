@@ -68,11 +68,11 @@ def parser_ui():
 
 def display_results(results):
     results_df = pd.DataFrame.from_dict(results, orient="index").reset_index()
-    results_df.rename(columns={"index": "Section", 0: "Content"}, inplace=True)
+    results_df = results_df.rename(columns={"index": "Section", 0: "Content"})
     
     with st.form("segmenter_editor_form"):
         st.title("Parser Results")
-        st.caption("Edit the segments as needed.")
+        st.caption("Double click on the content cells to edit the results as needed.")
         edited_segment = st.data_editor(
                 results_df,
                 hide_index=True,
@@ -81,10 +81,12 @@ def display_results(results):
                 },
                 disabled=["Section"],
             ) 
-        submit_button = st.form_submit_button("Submit")
+        save_button = st.form_submit_button("Save")
 
-    if submit_button:
-        segment_saved = st.toast('Saved', icon="🎉")
+    if save_button:
+        edited_segment_dict = {row["Section"]: row["Content"] for row in edited_segment.to_dict(orient="records")}
+        callbacks.set_segment_results(edited_segment_dict)
+        st.toast('Saved', icon="🎉")
     
 
 def display_parse_results():
