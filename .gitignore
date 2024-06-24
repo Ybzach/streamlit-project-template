@@ -1,3 +1,7 @@
+# Custom
+myProject/bert-bilstm-crf/bert/
+myProject/bert-bilstm-crf/checkpoint/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
