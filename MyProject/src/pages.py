@@ -9,39 +9,30 @@ import streamlit as st
 
 # HOME PAGE ================================================================================
 class HomePage():
-    """
-    Your Home / Landing Page
-    Here you can add your defined components under the loadPage() function
-    """
     @staticmethod
     def load_home_page():
-        """
-        example home page load function
-        """
         components.home_title()
         components.pdf_uploader()
         if st.session_state['submitted']:
             st.switch_page('pages/parser.py')
 
-       
 class ParserPage():
-    """
-    Example Page class
-    """
     @staticmethod
     def load_page():
-        """
-        example page load function
-        """
-        home_button = st.button('Home')
-        if home_button:
-            callbacks.update_submit(False)
-            st.switch_page('app.py')
-        components.parser_title()
-        components.parser_ui()
+        # components.parser_title()
         
+        components.parser_ui()
 
-    def load_pdf(uploaded_file):
-        ui_width = st_javascript("window.innerWidth")
-        components.displayPDF(uploaded_file, ui_width)
-
+class AnalysisPage():
+    @staticmethod
+    def load_page():
+        col1, col2, col3 = st.columns([1, 8, 2])
+        with col1:
+            segment_btn = st.button('Return')
+        with col3:
+            home_button = st.button('Upload another resume', type='primary', use_container_width=True)
+        if home_button:
+            st.switch_page('app.py')
+        if segment_btn:
+            st.switch_page('pages/parser.py')
+        components.analysis_ui()

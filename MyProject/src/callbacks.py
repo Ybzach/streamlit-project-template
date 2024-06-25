@@ -4,7 +4,9 @@ this is where you define your callbacks
 
 import streamlit as st
 from src import components
-from lib.util import resume_segment
+from text_segmentation.resume_segment import resumeSegmenter
+from information_extraction import inference as pipeline
+
 
 def set_resume(document):
     st.session_state['resume'] = document
@@ -18,15 +20,31 @@ def load_parser():
 def update_submit(submitted: bool):
     st.session_state['submitted'] = submitted 
 
-def segment_resume(resume):
-    results = st.session_state['segmenter'].segment(resume)
-    set_segment_results(results)
-
-def reload_segmenter():
-    st.session_state['segmenter'] = resume_segment.resumeSegmenter()
+def segment_resume():
+    with st.spinner('Parsing Resume...'):
+        segmenter = resumeSegmenter()
+        resume = get_resume()
+        results = segmenter.segment(resume)
+        set_segment_results(results)
     
 def get_segment_results():
     return st.session_state['segment_results']
 
 def set_segment_results(results):
     st.session_state['segment_results'] = results
+
+def get_entities():
+    return st.session_state['entities']
+
+@st.cache_resource()
+def load_ner_model():
+    print("loading NER model...")
+    return pipeline.Predictor()
+
+def analyse_job_description():
+    with st.spinner("Analysing job description..."):
+        ner_model = load_ner_model()
+        print("NER model loaded successfully...")
+        job_description = st.session_state['job_description']
+
+        st.session_state['entities'] = ner_model.ner_predict(job_description)
