@@ -6,8 +6,8 @@ from transformers import BertTokenizer
 
 
 class CommonConfig:
-    bert_dir = "./model_hub/bert-base-cased/"
-    output_dir = "./checkpoint/"
+    bert_dir = "information_extraction/bert/"
+    output_dir = "information_extraction/checkpoint/"
     data_dir = "./data/"
 
 

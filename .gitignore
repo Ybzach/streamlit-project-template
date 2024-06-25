@@ -1,6 +1,6 @@
 # Custom
-myProject/bert-bilstm-crf/bert/
-myProject/bert-bilstm-crf/checkpoint/
+myProject/information_extraction/bert/
+myProject/information_extraction/checkpoint/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -4,14 +4,18 @@ import torch
 import numpy as np
 
 from collections import namedtuple
-from model import BertNer
+from .model import BertNer
 from seqeval.metrics.sequence_labeling import get_entities
 from transformers import BertTokenizerFast
 
 
 def get_args(args_path, args_name=None):
-    with open(args_path, "r", encoding="utf-8") as fp:
-        args_dict = json.load(fp)
+    try:
+        with open(args_path, "r", encoding="utf-8") as fp:
+            args_dict = json.load(fp)
+    except FileNotFoundError:
+        print(f"File not found: {args_path}")
+        return None
     # 注意args不可被修改了
     args = namedtuple(args_name, args_dict.keys())(*args_dict.values())
     return args
@@ -19,7 +23,7 @@ def get_args(args_path, args_name=None):
 
 class Predictor:
     def __init__(self):
-        self.ner_args = get_args(os.path.join("./bin/", "ner_args.json"), "ner_args")
+        self.ner_args = get_args(os.path.join("information_extraction/checkpoint", "ner_args.json"), "ner_args")
         self.ner_id2label = {int(k): v for k, v in self.ner_args.id2label.items()}
         self.tokenizer = BertTokenizerFast.from_pretrained(self.ner_args.bert_dir)
         self.max_seq_len = self.ner_args.max_seq_len
