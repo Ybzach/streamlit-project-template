@@ -69,18 +69,16 @@ class resumeSegmenter:
 
             most_frequent_font_size = max(font_sizes, key=font_sizes.get)
         return most_frequent_font_size
-
-    def is_section_header(self, line, average_font_size):
-        if self.is_heading(line,  average_font_size):
-            return (self.get_section(line['text'].strip()))
-            
+  
     def segment(self, resume):
         resume = self.scrape(resume)
         average_font_size = self.get_average_font_size(resume)
         sections = {}
         for line in resume:
-            section_type = self.is_section_header(line, average_font_size)
-            # print(sections)
+            section_type = None
+            if self.is_heading(line, average_font_size):
+                section_type = self.get_section(line['text'].strip())
+
             if section_type != None:
                 sections[section_type] = ''
                 continue
@@ -89,5 +87,6 @@ class resumeSegmenter:
             else:
                 section_head, section_content = sections.popitem()
                 sections[section_head] = section_content + line['text'].strip() + ' '
+                
         self.results = sections
         return sections
