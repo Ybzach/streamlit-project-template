@@ -1,4 +1,5 @@
 import fitz
+import math
 
 EDUCATION_TITLES = ['education', 'academic background', 'education background']
 WORK_EXP_TITLES = ['professional experience', 'experience', 'work experience']
@@ -7,7 +8,6 @@ PROJECTS_TITLES = ['projects', 'project']
 EXCO_TITLES = ['extracurricular', 'involvement', 'volunteer']
 
 class resumeSegmenter:
-
     def __init__(self):
         self.results = {}
         self.section_titles = {
@@ -32,24 +32,20 @@ class resumeSegmenter:
                     for span in spans:
                         data = span['spans']
                         for lines in data:
-                            # if (lines['text'].strip() != ''): # only store font information of a specific keyword
-                            #     scraped.append((lines['text'].strip(), lines['size']lines['size'], lines['font']))
                             scraped.append(lines)
-                            # scraped.append((i, lines['text']))
-                                # lines['text'] -> string, lines['size'] -> font size, lines['font'] -> font name
-                # scraped.append(block)
                 i+=1
                 
         pdf.close()
         return scraped
 
-    def is_heading(self, line):
+    def is_heading(self, line, average_font_size):
         text = line['text'].strip()
+        line_font_size = math.floor(line['size'])
         if text == '':
             return False
         elif len(text.split(" ")) > 3:
             return False
-        elif "bold" not in line['font'].lower():
+        elif "bold" not in line['font'].lower() and line_font_size <= average_font_size:
             return False
             
         return True
@@ -61,17 +57,29 @@ class resumeSegmenter:
                     self.section_titles.pop(titles) # remove section from lookup dict after a match to avoid redundancy
                     return titles
 
-    def is_section_header(self, line):
-        if self.is_heading(line):
+    def get_average_font_size(self, resume):
+        font_sizes = {}
+        pass
+        for line in resume:
+            line_font_size = math.floor(line['size'])
+            if line_font_size in font_sizes:
+                font_sizes[line_font_size] += 1
+            else:
+                font_sizes[line_font_size] = 1
+
+            most_frequent_font_size = max(font_sizes, key=font_sizes.get)
+        return most_frequent_font_size
+
+    def is_section_header(self, line, average_font_size):
+        if self.is_heading(line,  average_font_size):
             return (self.get_section(line['text'].strip()))
             
     def segment(self, resume):
         resume = self.scrape(resume)
-
+        average_font_size = self.get_average_font_size(resume)
         sections = {}
         for line in resume:
-            section_type = self.is_section_header(line)
-            # print(line)
+            section_type = self.is_section_header(line, average_font_size)
             # print(sections)
             if section_type != None:
                 sections[section_type] = ''
@@ -81,6 +89,5 @@ class resumeSegmenter:
             else:
                 section_head, section_content = sections.popitem()
                 sections[section_head] = section_content + line['text'].strip() + ' '
-                # print("sections: ", sections)
         self.results = sections
         return sections
