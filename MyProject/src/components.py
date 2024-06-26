@@ -27,10 +27,21 @@ def display_pdf(upl_file, width):
     base64_pdf = base64.b64encode(bytes_data).decode("utf-8", 'ignore')
 
     # Embed PDF in HTML
-    pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width={str(width)} height={str(width*4/3)} type="application/pdf"></iframe>'
+    pdf_display = f'''
+    <style>.block-container{{
+        padding-top:2rem;
+    }}
+    </style>
+    <iframe src="data:application/pdf;base64,{base64_pdf}" width={str(width)} height={str(width*4/3)} type="application/pdf"></iframe>
+    '''
 
+    home_button = st.button('Upload Resume Again')
+    if home_button:
+        callbacks.update_submit(False)
+        st.switch_page('app.py')
     # Display file
     st.markdown(pdf_display, unsafe_allow_html=True)
+
     
 
 def pdf_uploader():
@@ -80,24 +91,21 @@ def display_parse_results():
     col1, col2 = st.columns(spec=[1, 1], gap="large")
 
     with col1:
-        home_button = st.button('Return')
-        
-        if home_button:
-            callbacks.update_submit(False)
-            st.switch_page('app.py')
         ui_width = st_javascript("window.innerWidth")
         display_pdf(callbacks.get_resume(), ui_width -10)
     
     with col2:
         with st.container(height=80, border=False):
-            col1, col2 = st.columns([3, 1], gap="large")
-            with col2:
-                analysis_btn = st.button('Proceed', type='primary', use_container_width=True)
+            st.empty
         callbacks.segment_resume()
         segment_results = callbacks.get_segment_results()
         display_results(segment_results)
 
-        if analysis_btn:
+        with st.form("job_description_form", border=True):
+            st.header("Resume Analysis")
+            job_description = st.text_area("Enter the job description of your desired role here.", height=200, key='job_description')
+            analyse_btn = st.form_submit_button("Proceed", on_click=callbacks.analyse_job_description, type='primary')
+        if analyse_btn:
             st.switch_page('pages/analysis.py')
         
 
