@@ -11,11 +11,11 @@ class resumeSegmenter:
     def __init__(self):
         self.results = {}
         self.section_titles = {
-                            'education': EDUCATION_TITLES,
-                            'experience': WORK_EXP_TITLES,
-                            'skill': SKILL_TITLES,
-                            'project': PROJECTS_TITLES,
-                            'exco': EXCO_TITLES
+                            'EDUCATION': EDUCATION_TITLES,
+                            'EXPERIENCE': WORK_EXP_TITLES,
+                            'SKILL': SKILL_TITLES,
+                            'PROJECT': PROJECTS_TITLES,
+                            'INVOLVEMENTS': EXCO_TITLES
                         }
 
     def scrape(self, resume):
@@ -84,22 +84,3 @@ class resumeSegmenter:
                 # print("sections: ", sections)
         self.results = sections
         return sections
-
-
-if __name__ == "__main__":
-    openResume = r"D:\FYP1\streamlit-project-template\MyProject\lib\openresume-resume.pdf"
-    myResume = r"D:\FYP1\streamlit-project-template\MyProject\lib\Yaw Boon Zhe - Resume.pdf"
-    # resume = scrape(openResume)
-
-    segmenter = resumeSegmenter(myResume)
-    segment_results = segmenter.results
-    for section in segment_results:
-        print(section)
-        print(segment_results[section])
-        print()
-
-    # print(sections)
-                
-    
-    # scrape_html(myResume)
-    # print(get_section("EDUCATION"))
