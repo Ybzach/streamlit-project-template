@@ -20,10 +20,9 @@ class ParserPage():
     @staticmethod
     def load_page():
         # components.parser_title()
-        
-        components.parser_ui()
+        components.display_parse_results()
 
-class AnalysisPage():
+class ChatPage():
     @staticmethod
     def load_page():
         col1, col2, col3 = st.columns([1, 8, 2])
@@ -35,4 +34,4 @@ class AnalysisPage():
             st.switch_page('app.py')
         if segment_btn:
             st.switch_page('pages/parser.py')
-        components.analysis_ui()
+        components.chat()

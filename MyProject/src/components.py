@@ -9,15 +9,11 @@ from streamlit_javascript import st_javascript
 import pandas as pd
 import time
 import base64
+from openai import OpenAI
+from langchain.prompts import PromptTemplate
 
 def home_title():
     st.title('End-to-End Resume Analysis with LLM :brain:')
-
-def parser_title():
-    st.title('Resume Parser')
-
-def analysis_title():
-    st.title('Resume Analysis')
 
 def display_pdf(upl_file, width):
     # Read file as bytes:
@@ -42,8 +38,6 @@ def display_pdf(upl_file, width):
     # Display file
     st.markdown(pdf_display, unsafe_allow_html=True)
 
-    
-
 def pdf_uploader():
     uploaded_file = st.file_uploader(
         "Upload Resume",
@@ -57,12 +51,6 @@ def pdf_uploader():
             callbacks.update_submit(True)
     except:
         st.error('Upload failed, please try again.', icon="🚨")
-
-def parser_ui():
-    display_parse_results()
-
-def analysis_ui():
-    analysis()
 
 def display_results(results):
     results_df = pd.DataFrame.from_dict(results, orient="index").reset_index()
@@ -86,7 +74,6 @@ def display_results(results):
         callbacks.set_segment_results(edited_segment_dict)
         save_sucess = st.toast('Saved', icon="💾")
     
-
 def display_parse_results():
     col1, col2 = st.columns(spec=[1, 1], gap="large")
 
