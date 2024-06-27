@@ -1,8 +1,3 @@
-"""
-this is the main module where you set your initial sessions states
-and navigate your page with respect to `selected_page` session state
-"""
-
 import streamlit as st
 from src.pages import HomePage, ParserPage
 from text_segmentation.resume_segment import resumeSegmenter
@@ -23,6 +18,12 @@ if 'segment_results' not in st.session_state:
     st.session_state['segment_results'] = {}
 if 'entities' not in st.session_state:
     st.session_state['entities'] = []
+if 'messages' not in st.session_state:
+    st.session_state['messages'] = []
+if 'initial_analysis' not in st.session_state:
+    st.session_state['initial_analysis'] = ""
+if 'openai_api_key' not in st.session_state:
+    st.session_state['openai_api_key'] = None
 
 # page navigation
 HomePage.load_home_page()

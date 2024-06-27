@@ -6,6 +6,7 @@ and build your pages with the components you created
 from src import components
 from src import callbacks
 import streamlit as st
+from langchain_core.messages import AIMessage
 
 # HOME PAGE ================================================================================
 class HomePage():
@@ -35,3 +36,9 @@ class ChatPage():
         if segment_btn:
             st.switch_page('pages/parser.py')
         components.chat()
+        if st.session_state['initial_analysis'] == "":
+            callbacks.analyse_job_description()
+            intial_analysis = st.chat_message("assistant").write_stream(components.generate_prompt())
+            st.session_state['initial_analysis'] = intial_analysis
+            st.session_state.messages.append(AIMessage(content=intial_analysis))
+

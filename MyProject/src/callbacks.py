@@ -7,7 +7,6 @@ from src import components
 from text_segmentation.resume_segment import resumeSegmenter
 from information_extraction import inference as pipeline
 
-
 def set_resume(document):
     st.session_state['resume'] = document
 
@@ -36,15 +35,26 @@ def set_segment_results(results):
 def get_entities():
     return st.session_state['entities']
 
-@st.cache_resource()
+def save_job_description(job_description):
+    st.session_state['job_description'] = job_description
+
+@st.cache_resource(show_spinner=False)
 def load_ner_model():
-    print("loading NER model...")
+    print("Loading NER model...")
     return pipeline.Predictor()
 
+
 def analyse_job_description():
+    print("Analyzing job description...")
     with st.spinner("Analysing job description..."):
         ner_model = load_ner_model()
         print("NER model loaded successfully...")
         job_description = st.session_state['job_description']
 
         st.session_state['entities'] = ner_model.ner_predict(job_description)
+
+def set_openai_api_key(api_key):
+    st.session_state['openai_api_key'] = api_key
+
+def get_openai_api_key():
+    return st.session_state['openai_api_key']
